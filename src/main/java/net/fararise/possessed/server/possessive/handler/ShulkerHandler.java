@@ -1,10 +1,12 @@
 package net.fararise.possessed.server.possessive.handler;
 
+import net.fararise.possessed.Possessed;
 import net.fararise.possessed.server.api.EntityPossessHandler;
 import net.fararise.possessed.server.possessive.PossessivePlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityShulker;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
 public class ShulkerHandler implements EntityPossessHandler {
@@ -25,6 +27,11 @@ public class ShulkerHandler implements EntityPossessHandler {
             player.moveForward = 0.0F;
             player.moveStrafing = 0.0F;
         }
+    }
+
+    @Override
+    public ResourceLocation getIdentifier() {
+        return new ResourceLocation(Possessed.MODID, "shulker");
     }
 
     @Override

@@ -1,10 +1,12 @@
 package net.fararise.possessed.server.possessive.handler;
 
+import net.fararise.possessed.Possessed;
 import net.fararise.possessed.server.api.EntityPossessHandler;
 import net.fararise.possessed.server.possessive.PossessivePlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 
 public class WaterMobHandler implements EntityPossessHandler {
     @Override
@@ -35,6 +37,11 @@ public class WaterMobHandler implements EntityPossessHandler {
 
     @Override
     public void onClickAir(PossessivePlayer possessivePlayer, EntityPlayer player) {
+    }
+
+    @Override
+    public ResourceLocation getIdentifier() {
+        return new ResourceLocation(Possessed.MODID, "water_mob");
     }
 
     @Override

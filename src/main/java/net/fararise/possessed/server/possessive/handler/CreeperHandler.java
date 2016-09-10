@@ -2,42 +2,33 @@ package net.fararise.possessed.server.possessive.handler;
 
 import net.fararise.possessed.Possessed;
 import net.fararise.possessed.server.api.EntityPossessHandler;
+import net.fararise.possessed.server.possessive.PossessHandler;
 import net.fararise.possessed.server.possessive.PossessivePlayer;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntitySquid;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
-public class SquidHandler implements EntityPossessHandler {
+public class CreeperHandler implements EntityPossessHandler {
     @Override
     public void onUpdate(PossessivePlayer possessivePlayer, EntityPlayer player) {
-        EntitySquid squid = (EntitySquid) possessivePlayer.getPossessing();
-        if (squid.squidRotation > Math.PI * 2.0) {
-            if (squid.worldObj.isRemote) {
-                squid.squidRotation = 0.0F;
-            }
-        }
-    }
-
-    @Override
-    public void onDeath(PossessivePlayer possessivePlayer, EntityPlayer player) {
-    }
-
-    @Override
-    public void onClickBlock(PossessivePlayer possessivePlayer, EntityPlayer player) {
     }
 
     @Override
     public void onClickAir(PossessivePlayer possessivePlayer, EntityPlayer player) {
+        EntityCreeper possessing = (EntityCreeper) possessivePlayer.getPossessing();
+        possessing.ignite();
+        possessing.setDead();
+        PossessHandler.possess(player, null);
     }
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(Possessed.MODID, "squid");
+        return new ResourceLocation(Possessed.MODID, "creeper");
     }
 
     @Override
     public Class<? extends EntityLivingBase> getEntityClass() {
-        return EntitySquid.class;
+        return EntityCreeper.class;
     }
 }

@@ -4,12 +4,15 @@ import net.fararise.possessed.Possessed;
 import net.fararise.possessed.server.api.EntityPossessHandler;
 import net.fararise.possessed.server.network.PossessMessage;
 import net.fararise.possessed.server.possessive.handler.ChickenHandler;
+import net.fararise.possessed.server.possessive.handler.CreeperHandler;
 import net.fararise.possessed.server.possessive.handler.EndermanHandler;
 import net.fararise.possessed.server.possessive.handler.FlyingHandler;
 import net.fararise.possessed.server.possessive.handler.GuardianHandler;
 import net.fararise.possessed.server.possessive.handler.RabbitHandler;
 import net.fararise.possessed.server.possessive.handler.ShulkerHandler;
+import net.fararise.possessed.server.possessive.handler.SkeletonHandler;
 import net.fararise.possessed.server.possessive.handler.SlimeHandler;
+import net.fararise.possessed.server.possessive.handler.SpiderHandler;
 import net.fararise.possessed.server.possessive.handler.SquidHandler;
 import net.fararise.possessed.server.possessive.handler.WaterMobHandler;
 import net.minecraft.entity.EntityFlying;
@@ -18,9 +21,11 @@ import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 import java.util.ArrayList;
@@ -34,16 +39,20 @@ public class PossessHandler {
     private static final Map<EntityPlayer, PossessivePlayer> SERVER_POSSESSIVE_PLAYERS = new HashMap<>();
 
     private static final Map<Class<? extends EntityLivingBase>, List<EntityPossessHandler>> POSSESS_HANDLERS = new HashMap<>();
+    private static final Map<ResourceLocation, EntityPossessHandler> POSSESS_HANDLER_IDENTIFIERS = new HashMap<>();
 
     public static void onPreInit() {
         PossessHandler.registerHandler(new ChickenHandler());
+        PossessHandler.registerHandler(new CreeperHandler());
         PossessHandler.registerHandler(new EndermanHandler());
-        PossessHandler.registerHandler(new FlyingHandler(EntityFlying.class));
-        PossessHandler.registerHandler(new FlyingHandler(EntityBat.class));
-        PossessHandler.registerHandler(new FlyingHandler(EntityBlaze.class));
+        PossessHandler.registerHandler(new FlyingHandler(EntityFlying.class, new ResourceLocation(Possessed.MODID, "flying")));
+        PossessHandler.registerHandler(new FlyingHandler(EntityBat.class, new ResourceLocation(Possessed.MODID, "bat")));
+        PossessHandler.registerHandler(new FlyingHandler(EntityBlaze.class, new ResourceLocation(Possessed.MODID, "blaze")));
         PossessHandler.registerHandler(new RabbitHandler());
         PossessHandler.registerHandler(new ShulkerHandler());
+        PossessHandler.registerHandler(new SkeletonHandler());
         PossessHandler.registerHandler(new SlimeHandler());
+        PossessHandler.registerHandler(new SpiderHandler());
         PossessHandler.registerHandler(new SquidHandler());
         PossessHandler.registerHandler(new GuardianHandler());
         PossessHandler.registerHandler(new WaterMobHandler());
@@ -122,6 +131,10 @@ public class PossessHandler {
         }
         handlers.add(handler);
         PossessHandler.POSSESS_HANDLERS.put(entity, handlers);
+        PossessHandler.POSSESS_HANDLER_IDENTIFIERS.put(handler.getIdentifier(), handler);
+        if (handler.isEventHandler()) {
+            MinecraftForge.EVENT_BUS.register(handler);
+        }
     }
 
     public static List<EntityPossessHandler> getPossessHandlers(EntityLivingBase entity) {
@@ -132,6 +145,10 @@ public class PossessHandler {
             }
         }
         return handlers;
+    }
+
+    public static EntityPossessHandler getPossessHandler(ResourceLocation identifier) {
+        return PossessHandler.POSSESS_HANDLER_IDENTIFIERS.get(identifier);
     }
 
     private static Map<EntityPlayer, PossessivePlayer> getPossessivePlayers(World world) {

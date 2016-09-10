@@ -1,10 +1,12 @@
 package net.fararise.possessed.server.possessive.handler;
 
+import net.fararise.possessed.Possessed;
 import net.fararise.possessed.server.api.EntityPossessHandler;
 import net.fararise.possessed.server.possessive.PossessivePlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityGuardian;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 
 public class GuardianHandler implements EntityPossessHandler {
     @Override
@@ -23,6 +25,11 @@ public class GuardianHandler implements EntityPossessHandler {
             player.motionX += player.getRNG().nextFloat() - 0.5F;
             player.motionZ += player.getRNG().nextFloat() - 0.5F;
         }
+    }
+
+    @Override
+    public ResourceLocation getIdentifier() {
+        return new ResourceLocation(Possessed.MODID, "guardian");
     }
 
     @Override

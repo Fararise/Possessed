@@ -22,6 +22,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.play.server.SPacketSetPassengers;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -107,8 +108,10 @@ public class PossessivePlayer {
         if (!render) {
             PossessHandler.setSize(player, this.possessing.width, this.possessing.height);
             this.possessing.onUpdate();
-            for (EntityPossessHandler handler : this.handlers) {
-                handler.onUpdate(this, player);
+            if (this.isPossessing) {
+                for (EntityPossessHandler handler : this.handlers) {
+                    handler.onUpdate(this, player);
+                }
             }
         }
         this.possessing.rotationYaw = player.rotationYaw;
@@ -251,6 +254,10 @@ public class PossessivePlayer {
             player.maxHurtTime = this.possessing.maxHurtTime;
             player.maxHurtResistantTime = this.possessing.maxHurtResistantTime;
             player.attackedAtYaw = this.possessing.attackedAtYaw;
+
+            if (this.possessing.isBurning() && !player.capabilities.isCreativeMode) {
+                player.setFire(1);
+            }
         }
 
         if (this.possessing.isDead && this.possessing.deathTime > 0) {
@@ -322,6 +329,7 @@ public class PossessivePlayer {
         }
         player.stepHeight = 0.6F;
         player.eyeHeight = player.getDefaultEyeHeight();
+        player.setFire(0);
         player.getFoodStats().setFoodLevel(this.originalHunger);
         player.getFoodStats().setFoodSaturationLevel(this.originalSaturation);
         this.possessing.noClip = false;
@@ -389,6 +397,14 @@ public class PossessivePlayer {
         NBTTagList originalInventoryTag = new NBTTagList();
         this.originalInventory.writeToNBT(originalInventoryTag);
         compound.setTag("OriginalInventory", originalInventoryTag);
+        NBTTagList handlerList = new NBTTagList();
+        for (EntityPossessHandler possessHandler : this.handlers) {
+            NBTTagCompound handlerTag = new NBTTagCompound();
+            handlerTag.setString("Identifier", possessHandler.getIdentifier().toString());
+            possessHandler.serialize(player, handlerTag);
+            handlerList.appendTag(handlerTag);
+        }
+        compound.setTag("Handlers", handlerList);
     }
 
     public void deserialize(NBTTagCompound compound, EntityPlayer player) {
@@ -404,6 +420,17 @@ public class PossessivePlayer {
         this.originalInventory = new InventoryPlayer(player);
         this.originalInventory.readFromNBT(originalInventoryTag);
         this.originalInventoryContainer = new ContainerPlayer(this.originalInventory, !player.worldObj.isRemote, player);
+        NBTTagList handlerList = compound.getTagList("Handlers", 10);
+        for (int i = 0; i < handlerList.tagCount(); i++) {
+            NBTTagCompound handlerTag = handlerList.getCompoundTagAt(i);
+            try {
+                EntityPossessHandler possessHandler = PossessHandler.getPossessHandler(new ResourceLocation(handlerTag.getString("Identifier")));
+                possessHandler.deserialize(player, handlerTag);
+            } catch (Exception e) {
+                System.err.println("Failed to load possess handler: " + handlerTag + "! Skipping.");
+                e.printStackTrace();
+            }
+        }
     }
 
     public boolean isAnimating() {
@@ -430,5 +457,9 @@ public class PossessivePlayer {
         this.originalX = originalX;
         this.originalY = originalY;
         this.originalZ = originalZ;
+    }
+
+    public boolean hasHandler(EntityPossessHandler handler) {
+        return this.handlers.contains(handler);
     }
 }

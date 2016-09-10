@@ -1,5 +1,6 @@
 package net.fararise.possessed.server.possessive.handler;
 
+import net.fararise.possessed.Possessed;
 import net.fararise.possessed.server.api.EntityPossessHandler;
 import net.fararise.possessed.server.possessive.PossessivePlayer;
 import net.minecraft.block.state.IBlockState;
@@ -12,6 +13,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.ForgeHooks;
@@ -45,6 +47,11 @@ public class EndermanHandler implements EntityPossessHandler {
             player.worldObj.playSound(null, player.prevPosX, player.prevPosY, player.prevPosZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, player.getSoundCategory(), 1.0F, 1.0F);
             player.worldObj.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, player.getSoundCategory(), 1.0F, 1.0F);
         }
+    }
+
+    @Override
+    public ResourceLocation getIdentifier() {
+        return new ResourceLocation(Possessed.MODID, "enderman");
     }
 
     @Override

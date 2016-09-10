@@ -98,6 +98,7 @@ public class ServerEventHandler {
                 }
                 event.setCanceled(true);
             }
+            EntityPossessHandler.PLAYER_DATA.remove(player);
         }
         Entity sourceOfDamage = event.getSource().getSourceOfDamage();
         if (sourceOfDamage instanceof EntityPlayer) {
@@ -198,7 +199,7 @@ public class ServerEventHandler {
             EntityPlayer player = (EntityPlayer) event.getEntityLiving();
             PossessivePlayer possessivePlayer = PossessHandler.get(player);
             if (possessivePlayer != null) {
-                if (event.getSource().isFireDamage() && possessivePlayer.getPossessing().isImmuneToFire()) {
+                if (event.getSource().isFireDamage()) {
                     event.setCanceled(true);
                 } else {
                     possessivePlayer.getPossessing().attackEntityFrom(event.getSource(), event.getAmount());

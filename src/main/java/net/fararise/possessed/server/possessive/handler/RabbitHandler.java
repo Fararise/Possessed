@@ -1,5 +1,6 @@
 package net.fararise.possessed.server.possessive.handler;
 
+import net.fararise.possessed.Possessed;
 import net.fararise.possessed.server.api.EntityPossessHandler;
 import net.fararise.possessed.server.possessive.PossessivePlayer;
 import net.minecraft.block.Block;
@@ -9,6 +10,7 @@ import net.minecraft.entity.passive.EntityRabbit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
@@ -32,6 +34,11 @@ public class RabbitHandler implements EntityPossessHandler {
                 }
             }
         }
+    }
+
+    @Override
+    public ResourceLocation getIdentifier() {
+        return new ResourceLocation(Possessed.MODID, "rabbit");
     }
 
     @Override
