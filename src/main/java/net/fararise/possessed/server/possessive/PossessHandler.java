@@ -3,11 +3,14 @@ package net.fararise.possessed.server.possessive;
 import net.fararise.possessed.Possessed;
 import net.fararise.possessed.server.api.EntityPossessHandler;
 import net.fararise.possessed.server.network.PossessMessage;
+import net.fararise.possessed.server.possessive.handler.BlazeHandler;
 import net.fararise.possessed.server.possessive.handler.ChickenHandler;
 import net.fararise.possessed.server.possessive.handler.CreeperHandler;
 import net.fararise.possessed.server.possessive.handler.DragonHandler;
 import net.fararise.possessed.server.possessive.handler.EndermanHandler;
 import net.fararise.possessed.server.possessive.handler.FlyingHandler;
+import net.fararise.possessed.server.possessive.handler.GhastHandler;
+import net.fararise.possessed.server.possessive.handler.GrassEatHandler;
 import net.fararise.possessed.server.possessive.handler.GuardianHandler;
 import net.fararise.possessed.server.possessive.handler.IronGolemHandler;
 import net.fararise.possessed.server.possessive.handler.PolarBearHandler;
@@ -25,6 +28,8 @@ import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.passive.EntityBat;
+import net.minecraft.entity.passive.EntityChicken;
+import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -49,6 +54,7 @@ public class PossessHandler {
     private static final Map<ResourceLocation, EntityPossessHandler> POSSESS_HANDLER_IDENTIFIERS = new HashMap<>();
 
     public static void onPreInit() {
+        PossessHandler.registerHandler(new BlazeHandler());
         PossessHandler.registerHandler(new ChickenHandler());
         PossessHandler.registerHandler(new CreeperHandler());
         PossessHandler.registerHandler(new DragonHandler());
@@ -56,6 +62,9 @@ public class PossessHandler {
         PossessHandler.registerHandler(new FlyingHandler(EntityFlying.class, new ResourceLocation(Possessed.MODID, "flying")));
         PossessHandler.registerHandler(new FlyingHandler(EntityBat.class, new ResourceLocation(Possessed.MODID, "bat")));
         PossessHandler.registerHandler(new FlyingHandler(EntityBlaze.class, new ResourceLocation(Possessed.MODID, "blaze")));
+        PossessHandler.registerHandler(new GhastHandler());
+        PossessHandler.registerHandler(new GrassEatHandler(EntityCow.class, new ResourceLocation(Possessed.MODID, "cow_grass")));
+        PossessHandler.registerHandler(new GrassEatHandler(EntityChicken.class, new ResourceLocation(Possessed.MODID, "chicken_grass")));
         PossessHandler.registerHandler(new IronGolemHandler());
         PossessHandler.registerHandler(new PolarBearHandler());
         PossessHandler.registerHandler(new RabbitHandler());

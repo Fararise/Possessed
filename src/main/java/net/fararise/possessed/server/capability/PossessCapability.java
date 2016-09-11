@@ -63,7 +63,9 @@ public interface PossessCapability {
             if (entity instanceof EntityLivingBase) {
                 PossessHandler.possess(this.player, (EntityLivingBase) entity);
                 PossessivePlayer player = PossessHandler.get(this.player);
-                player.deserialize(compound, this.player);
+                if (player != null) {
+                    player.deserialize(compound, this.player);
+                }
             }
             this.possessiveCharge = compound.getInteger("PossessiveCharge");
         }
