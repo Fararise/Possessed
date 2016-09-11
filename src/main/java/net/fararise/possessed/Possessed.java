@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class Possessed {
     public static final String MODID = "possessed";
     public static final String NAME = "Possessed";
-    public static final String VERSION = "0.1.0";
+    public static final String VERSION = "0.2.0";
 
     @SidedProxy(serverSide = "net.fararise.possessed.server.ServerProxy", clientSide = "net.fararise.possessed.client.ClientProxy")
     private static ServerProxy proxy;
