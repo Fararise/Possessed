@@ -97,10 +97,12 @@ public class ClientEventHandler {
         EntityPlayer player = event.getEntityPlayer();
         PossessivePlayer possessivePlayer = PossessHandler.get(player);
         if (possessivePlayer != null) {
-            for (EntityPossessHandler handler : PossessHandler.getPossessHandlers(possessivePlayer.getPossessing())) {
-                handler.onClickAir(possessivePlayer, player);
+            if (possessivePlayer.isPossessing() && possessivePlayer.getPossessAnimation() >= PossessivePlayer.POSSESS_ANIMATION_LENGTH) {
+                for (EntityPossessHandler handler : PossessHandler.getPossessHandlers(possessivePlayer.getPossessing())) {
+                    handler.onClickAir(possessivePlayer, player);
+                }
+                Possessed.getNetworkWrapper().sendToServer(new PossessClickEmptyMessage());
             }
-            Possessed.getNetworkWrapper().sendToServer(new PossessClickEmptyMessage());
         }
     }
 

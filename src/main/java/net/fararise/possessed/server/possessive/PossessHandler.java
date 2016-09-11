@@ -13,6 +13,7 @@ import net.fararise.possessed.server.possessive.handler.GhastHandler;
 import net.fararise.possessed.server.possessive.handler.GrassEatHandler;
 import net.fararise.possessed.server.possessive.handler.GuardianHandler;
 import net.fararise.possessed.server.possessive.handler.IronGolemHandler;
+import net.fararise.possessed.server.possessive.handler.OcelotHandler;
 import net.fararise.possessed.server.possessive.handler.PolarBearHandler;
 import net.fararise.possessed.server.possessive.handler.RabbitHandler;
 import net.fararise.possessed.server.possessive.handler.SheepHandler;
@@ -30,6 +31,7 @@ import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityCow;
+import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -65,7 +67,10 @@ public class PossessHandler {
         PossessHandler.registerHandler(new GhastHandler());
         PossessHandler.registerHandler(new GrassEatHandler(EntityCow.class, new ResourceLocation(Possessed.MODID, "cow_grass")));
         PossessHandler.registerHandler(new GrassEatHandler(EntityChicken.class, new ResourceLocation(Possessed.MODID, "chicken_grass")));
+        PossessHandler.registerHandler(new GrassEatHandler(EntityPig.class, new ResourceLocation(Possessed.MODID, "pig_grass")));
+        PossessHandler.registerHandler(new GuardianHandler());
         PossessHandler.registerHandler(new IronGolemHandler());
+        PossessHandler.registerHandler(new OcelotHandler());
         PossessHandler.registerHandler(new PolarBearHandler());
         PossessHandler.registerHandler(new RabbitHandler());
         PossessHandler.registerHandler(new SheepHandler());
@@ -75,7 +80,6 @@ public class PossessHandler {
         PossessHandler.registerHandler(new SnowmanHandler());
         PossessHandler.registerHandler(new SpiderHandler());
         PossessHandler.registerHandler(new SquidHandler());
-        PossessHandler.registerHandler(new GuardianHandler());
         PossessHandler.registerHandler(new WaterMobHandler());
         PossessHandler.registerHandler(new WitherHandler());
     }

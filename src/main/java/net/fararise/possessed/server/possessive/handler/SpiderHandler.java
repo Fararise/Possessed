@@ -16,14 +16,15 @@ public class SpiderHandler implements EntityPossessHandler {
             player.motionX = MathHelper.clamp_double(player.motionX, -0.15, 0.15);
             player.motionZ = MathHelper.clamp_double(player.motionZ, -0.15, 0.15);
             player.fallDistance = 0.0F;
-            if (player.motionY < -0.15) {
-                player.motionY = -0.15;
-            } else if (player.motionY >= 0.0 || player.onGround) {
-                player.motionY = 0.2;
-            }
             boolean sneaking = player.isSneaking();
             if (sneaking && player.motionY < 0.0) {
                 player.motionY = 0.0;
+            } else {
+                if (player.motionY < -0.15) {
+                    player.motionY = -0.15;
+                } else if (player.motionY >= 0.0 || player.onGround) {
+                    player.motionY = 0.2;
+                }
             }
         }
     }

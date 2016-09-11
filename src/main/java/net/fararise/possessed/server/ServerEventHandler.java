@@ -13,6 +13,8 @@ import net.fararise.possessed.server.possessive.PossessivePlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -27,6 +29,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -268,8 +271,10 @@ public class ServerEventHandler {
         EntityPlayer player = event.getEntityPlayer();
         PossessivePlayer possessivePlayer = PossessHandler.get(player);
         if (possessivePlayer != null) {
-            for (EntityPossessHandler handler : PossessHandler.getPossessHandlers(possessivePlayer.getPossessing())) {
-                handler.onClickBlock(possessivePlayer, player, event.getWorld().getBlockState(event.getPos()), event.getPos());
+            if (possessivePlayer.isPossessing() && possessivePlayer.getPossessAnimation() >= PossessivePlayer.POSSESS_ANIMATION_LENGTH) {
+                for (EntityPossessHandler handler : PossessHandler.getPossessHandlers(possessivePlayer.getPossessing())) {
+                    handler.onClickBlock(possessivePlayer, player, event.getWorld().getBlockState(event.getPos()), event.getPos());
+                }
             }
         }
     }
@@ -281,6 +286,34 @@ public class ServerEventHandler {
         if (possessivePlayer != null) {
             for (EntityPossessHandler handler : PossessHandler.getPossessHandlers(possessivePlayer.getPossessing())) {
                 handler.onClickAir(possessivePlayer, player);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onLivingSetTarget(LivingSetAttackTargetEvent event) {
+        if (event.getTarget() instanceof EntityPlayer && event.getEntityLiving() instanceof EntityLiving) {
+            EntityPlayer player = (EntityPlayer) event.getTarget();
+            PossessivePlayer possessivePlayer = PossessHandler.get(player);
+            if (possessivePlayer != null) {
+                EntityLiving entity = (EntityLiving) event.getEntityLiving();
+                boolean cancelled = true;
+                for (EntityAITasks.EntityAITaskEntry task : entity.targetTasks.taskEntries) {
+                    if (task.action instanceof EntityAINearestAttackableTarget) {
+                        try {
+                            Class<? extends EntityLivingBase> target = (Class<? extends EntityLivingBase>) ReflectionHandler.TARGET_CLASS.get(task.action);
+                            if (target.isAssignableFrom(possessivePlayer.getPossessing().getClass())) {
+                                cancelled = false;
+                                break;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                if (cancelled) {
+                    entity.setAttackTarget(null);
+                }
             }
         }
     }

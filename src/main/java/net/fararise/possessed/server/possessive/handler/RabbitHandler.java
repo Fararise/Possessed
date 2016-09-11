@@ -4,6 +4,7 @@ import net.fararise.possessed.Possessed;
 import net.fararise.possessed.server.api.EntityPossessHandler;
 import net.fararise.possessed.server.possessive.PossessivePlayer;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityRabbit;
@@ -13,6 +14,8 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class RabbitHandler implements EntityPossessHandler {
     @Override
@@ -44,5 +47,18 @@ public class RabbitHandler implements EntityPossessHandler {
     @Override
     public Class<? extends EntityLivingBase> getEntityClass() {
         return EntityRabbit.class;
+    }
+
+    @Override
+    public boolean isEventHandler() {
+        return true;
+    }
+
+    @SubscribeEvent
+    public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
+        IBlockState block = event.getEntityPlayer().worldObj.getBlockState(event.getPos());
+        if (block.getMaterial() == Material.GROUND || block.getMaterial() == Material.GRASS) {
+            event.setNewSpeed(event.getOriginalSpeed() * 2.0F);
+        }
     }
 }

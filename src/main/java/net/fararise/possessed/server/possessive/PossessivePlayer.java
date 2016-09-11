@@ -340,6 +340,7 @@ public class PossessivePlayer {
         this.possessing.setItemStackToSlot(EntityEquipmentSlot.LEGS, null);
         this.possessing.setItemStackToSlot(EntityEquipmentSlot.FEET, null);
         this.possessing.setPositionAndRotation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+        this.possessing.setSprinting(false);
         if (!world.isRemote && !(this.possessing.isDead && this.possessing.deathTime >= 20)) {
             this.possessing.isDead = false;
             this.possessing.worldObj = world;
