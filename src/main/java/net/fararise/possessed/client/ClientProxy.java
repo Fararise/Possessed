@@ -56,4 +56,12 @@ public class ClientProxy extends ServerProxy {
             ClientProxy.MINECRAFT.addScheduledTask(() -> call.apply(this.getPlayer(ctx)));
         }
     }
+
+    @Override
+    public void pickItem(EntityPlayer player, int index) {
+        player.inventory.pickItem(index);
+        if (player == MINECRAFT.thePlayer) {
+            MINECRAFT.playerController.pickItem(index);
+        }
+    }
 }

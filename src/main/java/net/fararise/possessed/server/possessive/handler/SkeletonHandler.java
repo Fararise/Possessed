@@ -90,11 +90,17 @@ public class SkeletonHandler implements EntityPossessHandler {
             if (!event.hasAmmo()) {
                 ItemStack stack = event.getBow();
                 World world = player.getEntityWorld();
+                EntitySkeleton skeleton = (EntitySkeleton) PossessHandler.get(player).getPossessing();
                 float velocity = ItemBow.getArrowVelocity(event.getCharge());
                 if (velocity >= 0.1) {
                     if (!world.isRemote) {
                         EntityTippedArrow arrow = new EntityTippedArrow(world, player);
-                        arrow.setPotionEffect(new ItemStack(Items.ARROW));
+                        if (skeleton.getSkeletonType() != SkeletonType.STRAY) {
+                            arrow.setPotionEffect(new ItemStack(Items.ARROW));
+                        } else {
+                            arrow.setPotionEffect(new ItemStack(Items.TIPPED_ARROW));
+                            arrow.addEffect(new PotionEffect(MobEffects.SLOWNESS, 600));
+                        }
                         arrow.setAim(player, player.rotationPitch, player.rotationYaw, 0.0F, velocity * 3.0F, 1.0F);
                         arrow.pickupStatus = EntityArrow.PickupStatus.CREATIVE_ONLY;
                         if (velocity == 1.0F) {

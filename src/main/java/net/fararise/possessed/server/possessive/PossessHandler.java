@@ -25,12 +25,14 @@ import net.fararise.possessed.server.possessive.handler.SpiderHandler;
 import net.fararise.possessed.server.possessive.handler.SquidHandler;
 import net.fararise.possessed.server.possessive.handler.WaterMobHandler;
 import net.fararise.possessed.server.possessive.handler.WitherHandler;
+import net.fararise.possessed.server.possessive.handler.ZombieHandler;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityCow;
+import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -62,12 +64,13 @@ public class PossessHandler {
         PossessHandler.registerHandler(new DragonHandler());
         PossessHandler.registerHandler(new EndermanHandler());
         PossessHandler.registerHandler(new FlyingHandler(EntityFlying.class, new ResourceLocation(Possessed.MODID, "flying")));
-        PossessHandler.registerHandler(new FlyingHandler(EntityBat.class, new ResourceLocation(Possessed.MODID, "bat")));
-        PossessHandler.registerHandler(new FlyingHandler(EntityBlaze.class, new ResourceLocation(Possessed.MODID, "blaze")));
+        PossessHandler.registerHandler(new FlyingHandler(EntityBat.class, new ResourceLocation(Possessed.MODID, "bat_flying")));
+        PossessHandler.registerHandler(new FlyingHandler(EntityBlaze.class, new ResourceLocation(Possessed.MODID, "blaze_flying")));
         PossessHandler.registerHandler(new GhastHandler());
         PossessHandler.registerHandler(new GrassEatHandler(EntityCow.class, new ResourceLocation(Possessed.MODID, "cow_grass")));
         PossessHandler.registerHandler(new GrassEatHandler(EntityChicken.class, new ResourceLocation(Possessed.MODID, "chicken_grass")));
         PossessHandler.registerHandler(new GrassEatHandler(EntityPig.class, new ResourceLocation(Possessed.MODID, "pig_grass")));
+        PossessHandler.registerHandler(new GrassEatHandler(EntityHorse.class, new ResourceLocation(Possessed.MODID, "horse_grass")));
         PossessHandler.registerHandler(new GuardianHandler());
         PossessHandler.registerHandler(new IronGolemHandler());
         PossessHandler.registerHandler(new OcelotHandler());
@@ -82,6 +85,7 @@ public class PossessHandler {
         PossessHandler.registerHandler(new SquidHandler());
         PossessHandler.registerHandler(new WaterMobHandler());
         PossessHandler.registerHandler(new WitherHandler());
+        PossessHandler.registerHandler(new ZombieHandler());
     }
 
     public static void possess(EntityPlayer player, EntityLivingBase entity) {

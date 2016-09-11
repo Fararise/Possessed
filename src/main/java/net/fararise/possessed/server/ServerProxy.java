@@ -33,4 +33,8 @@ public class ServerProxy {
     public void handleMessage(MessageContext ctx, Function<EntityPlayer, Void> call) {
         ((WorldServer) ctx.getServerHandler().playerEntity.worldObj).addScheduledTask(() -> call.apply(this.getPlayer(ctx)));
     }
+
+    public void pickItem(EntityPlayer player, int index) {
+        player.inventory.pickItem(index);
+    }
 }

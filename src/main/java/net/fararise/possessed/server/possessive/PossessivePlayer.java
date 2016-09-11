@@ -1,5 +1,6 @@
 package net.fararise.possessed.server.possessive;
 
+import net.fararise.possessed.Possessed;
 import net.fararise.possessed.server.api.EntityPossessHandler;
 import net.fararise.possessed.server.entity.MockMoveHelper;
 import net.fararise.possessed.server.entity.MockTask;
@@ -90,6 +91,7 @@ public class PossessivePlayer {
         this.newInventory.pickItem(player.inventory.currentItem);
         this.newInventoryContainer = new ContainerPlayer(this.newInventory, !player.worldObj.isRemote, player);
         this.handlers = PossessHandler.getPossessHandlers(possessing);
+        Possessed.getProxy().pickItem(player, 0);
     }
 
     public void update(EntityPlayer player, boolean render) {
@@ -257,6 +259,8 @@ public class PossessivePlayer {
 
             if (this.possessing.isBurning() && !player.capabilities.isCreativeMode) {
                 player.setFire(1);
+            } else if (this.possessing.isBurning()) {
+                this.possessing.extinguish();
             }
         }
 
