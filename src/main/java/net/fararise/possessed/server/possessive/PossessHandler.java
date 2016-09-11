@@ -5,22 +5,29 @@ import net.fararise.possessed.server.api.EntityPossessHandler;
 import net.fararise.possessed.server.network.PossessMessage;
 import net.fararise.possessed.server.possessive.handler.ChickenHandler;
 import net.fararise.possessed.server.possessive.handler.CreeperHandler;
+import net.fararise.possessed.server.possessive.handler.DragonHandler;
 import net.fararise.possessed.server.possessive.handler.EndermanHandler;
 import net.fararise.possessed.server.possessive.handler.FlyingHandler;
 import net.fararise.possessed.server.possessive.handler.GuardianHandler;
+import net.fararise.possessed.server.possessive.handler.IronGolemHandler;
+import net.fararise.possessed.server.possessive.handler.PolarBearHandler;
 import net.fararise.possessed.server.possessive.handler.RabbitHandler;
+import net.fararise.possessed.server.possessive.handler.SheepHandler;
 import net.fararise.possessed.server.possessive.handler.ShulkerHandler;
 import net.fararise.possessed.server.possessive.handler.SkeletonHandler;
 import net.fararise.possessed.server.possessive.handler.SlimeHandler;
+import net.fararise.possessed.server.possessive.handler.SnowmanHandler;
 import net.fararise.possessed.server.possessive.handler.SpiderHandler;
 import net.fararise.possessed.server.possessive.handler.SquidHandler;
 import net.fararise.possessed.server.possessive.handler.WaterMobHandler;
+import net.fararise.possessed.server.possessive.handler.WitherHandler;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -44,21 +51,34 @@ public class PossessHandler {
     public static void onPreInit() {
         PossessHandler.registerHandler(new ChickenHandler());
         PossessHandler.registerHandler(new CreeperHandler());
+        PossessHandler.registerHandler(new DragonHandler());
         PossessHandler.registerHandler(new EndermanHandler());
         PossessHandler.registerHandler(new FlyingHandler(EntityFlying.class, new ResourceLocation(Possessed.MODID, "flying")));
         PossessHandler.registerHandler(new FlyingHandler(EntityBat.class, new ResourceLocation(Possessed.MODID, "bat")));
         PossessHandler.registerHandler(new FlyingHandler(EntityBlaze.class, new ResourceLocation(Possessed.MODID, "blaze")));
+        PossessHandler.registerHandler(new IronGolemHandler());
+        PossessHandler.registerHandler(new PolarBearHandler());
         PossessHandler.registerHandler(new RabbitHandler());
+        PossessHandler.registerHandler(new SheepHandler());
         PossessHandler.registerHandler(new ShulkerHandler());
         PossessHandler.registerHandler(new SkeletonHandler());
         PossessHandler.registerHandler(new SlimeHandler());
+        PossessHandler.registerHandler(new SnowmanHandler());
         PossessHandler.registerHandler(new SpiderHandler());
         PossessHandler.registerHandler(new SquidHandler());
         PossessHandler.registerHandler(new GuardianHandler());
         PossessHandler.registerHandler(new WaterMobHandler());
+        PossessHandler.registerHandler(new WitherHandler());
     }
 
     public static void possess(EntityPlayer player, EntityLivingBase entity) {
+        if (entity != null) {
+            for (EntityPossessHandler possessHandler : PossessHandler.getPossessHandlers(entity)) {
+                if (!possessHandler.canPossess(player, entity)) {
+                    return;
+                }
+            }
+        }
         double originalX = player.lastTickPosX;
         double originalY = player.lastTickPosY;
         double originalZ = player.lastTickPosZ;
@@ -73,6 +93,7 @@ public class PossessHandler {
             }
         }
         if (entity != null) {
+            EntityPossessHandler.PLAYER_DATA.put(player, new NBTTagCompound());
             player.setPositionAndRotation(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
             PossessivePlayer possessivePlayer = new PossessivePlayer(player, entity, originalX, originalY, originalZ);
             possessivePlayer.update(player, false);

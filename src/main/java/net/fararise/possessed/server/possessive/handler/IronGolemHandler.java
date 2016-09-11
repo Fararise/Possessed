@@ -4,27 +4,26 @@ import net.fararise.possessed.Possessed;
 import net.fararise.possessed.server.api.EntityPossessHandler;
 import net.fararise.possessed.server.possessive.PossessivePlayer;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityShulker;
+import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
-public class ShulkerHandler implements EntityPossessHandler {
+public class IronGolemHandler implements EntityPossessHandler {
     @Override
     public void onUpdate(PossessivePlayer possessivePlayer, EntityPlayer player) {
-    }
-
-    @Override
-    public boolean canPossess(EntityPlayer player, EntityLivingBase entity) {
-        return false;
+        EntityIronGolem possessing = (EntityIronGolem) possessivePlayer.getPossessing();
+        if (possessing.getAttackTimer() <= 0 && player.isSwingInProgress) {
+            possessing.handleStatusUpdate((byte) 4);
+        }
     }
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(Possessed.MODID, "shulker");
+        return new ResourceLocation(Possessed.MODID, "iron_golem");
     }
 
     @Override
     public Class<? extends EntityLivingBase> getEntityClass() {
-        return EntityShulker.class;
+        return EntityIronGolem.class;
     }
 }

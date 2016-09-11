@@ -2,10 +2,12 @@ package net.fararise.possessed.server.api;
 
 import net.fararise.possessed.server.possessive.PossessHandler;
 import net.fararise.possessed.server.possessive.PossessivePlayer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +22,7 @@ public interface EntityPossessHandler {
     default void onDeath(PossessivePlayer possessivePlayer, EntityPlayer player) {
     }
 
-    default void onClickBlock(PossessivePlayer possessivePlayer, EntityPlayer player) {
+    default void onClickBlock(PossessivePlayer possessivePlayer, EntityPlayer player, IBlockState state, BlockPos pos) {
     }
 
     default void onClickAir(PossessivePlayer possessivePlayer, EntityPlayer player) {
@@ -62,5 +64,9 @@ public interface EntityPossessHandler {
             }
         }
         return false;
+    }
+
+    default boolean canPossess(EntityPlayer player, EntityLivingBase entity) {
+        return true;
     }
 }

@@ -28,18 +28,6 @@ public class WaterMobHandler implements EntityPossessHandler {
     }
 
     @Override
-    public void onDeath(PossessivePlayer possessivePlayer, EntityPlayer player) {
-    }
-
-    @Override
-    public void onClickBlock(PossessivePlayer possessivePlayer, EntityPlayer player) {
-    }
-
-    @Override
-    public void onClickAir(PossessivePlayer possessivePlayer, EntityPlayer player) {
-    }
-
-    @Override
     public ResourceLocation getIdentifier() {
         return new ResourceLocation(Possessed.MODID, "water_mob");
     }

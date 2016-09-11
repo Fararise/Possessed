@@ -269,7 +269,7 @@ public class ServerEventHandler {
         PossessivePlayer possessivePlayer = PossessHandler.get(player);
         if (possessivePlayer != null) {
             for (EntityPossessHandler handler : PossessHandler.getPossessHandlers(possessivePlayer.getPossessing())) {
-                handler.onClickBlock(possessivePlayer, player);
+                handler.onClickBlock(possessivePlayer, player, event.getWorld().getBlockState(event.getPos()), event.getPos());
             }
         }
     }
