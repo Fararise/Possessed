@@ -1,3 +1,5 @@
 item.possessive_helmet.name=Possessive Hat
 
 gui.possessive_charge.name=Possessive Charge
+
+notification.update_available.name=Update available: %s!

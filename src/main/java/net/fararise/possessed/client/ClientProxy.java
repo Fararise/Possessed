@@ -3,6 +3,7 @@ package net.fararise.possessed.client;
 import net.fararise.possessed.Possessed;
 import net.fararise.possessed.client.gui.GameOverlayGUI;
 import net.fararise.possessed.client.model.PossessiveHatModel;
+import net.fararise.possessed.client.update.UpdateHandler;
 import net.fararise.possessed.server.ServerProxy;
 import net.fararise.possessed.server.item.ItemRegistry;
 import net.minecraft.client.Minecraft;
@@ -26,6 +27,8 @@ public class ClientProxy extends ServerProxy {
     @Override
     public void onPreInit() {
         super.onPreInit();
+
+        UpdateHandler.checkUpdates();
 
         MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
         MinecraftForge.EVENT_BUS.register(new GameOverlayGUI());

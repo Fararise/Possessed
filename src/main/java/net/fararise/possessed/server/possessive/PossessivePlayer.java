@@ -1,6 +1,7 @@
 package net.fararise.possessed.server.possessive;
 
 import net.fararise.possessed.Possessed;
+import net.fararise.possessed.server.ReflectionHandler;
 import net.fararise.possessed.server.api.EntityPossessHandler;
 import net.fararise.possessed.server.entity.MockMoveHelper;
 import net.fararise.possessed.server.entity.MockTask;
@@ -335,7 +336,11 @@ public class PossessivePlayer {
         player.eyeHeight = player.getDefaultEyeHeight();
         player.setFire(0);
         player.getFoodStats().setFoodLevel(this.originalHunger);
-        player.getFoodStats().setFoodSaturationLevel(this.originalSaturation);
+        try {
+            ReflectionHandler.FOOD_SATURATION_LEVEL.set(player.getFoodStats(), this.originalSaturation);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         this.possessing.noClip = false;
         this.possessing.setHeldItem(EnumHand.MAIN_HAND, null);
         this.possessing.setHeldItem(EnumHand.OFF_HAND, null);
