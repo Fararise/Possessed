@@ -1,7 +1,7 @@
 package net.fararise.possessed.server.item;
 
 import net.fararise.possessed.Possessed;
-import net.fararise.possessed.client.model.PossessiveHatModel;
+import net.fararise.possessed.client.ClientProxy;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.creativetab.CreativeTabs;
@@ -18,7 +18,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PossessiveHelmet extends ItemArmor {
     public static final ArmorMaterial MATERIAL = EnumHelper.addArmorMaterial("possessive", Possessed.MODID + ":textures/armor/possessive.png", 7, new int[] { 1, 3, 5, 2 }, 25, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 0.0F);
-    private static final PossessiveHatModel MODEL = new PossessiveHatModel();
     private static final String TEXTURE = Possessed.MODID + ":textures/armor/possessive_hat.png";
 
     public PossessiveHelmet() {
@@ -38,6 +37,6 @@ public class PossessiveHelmet extends ItemArmor {
         if (entity instanceof EntityArmorStand) {
             GlStateManager.rotate(entity.rotationYaw, 0.0F, 1.0F, 0.0F);
         }
-        return PossessiveHelmet.MODEL;
+        return ClientProxy.HAT_MODEL;
     }
 }

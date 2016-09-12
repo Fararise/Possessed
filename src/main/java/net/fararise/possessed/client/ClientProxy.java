@@ -2,6 +2,7 @@ package net.fararise.possessed.client;
 
 import net.fararise.possessed.Possessed;
 import net.fararise.possessed.client.gui.GameOverlayGUI;
+import net.fararise.possessed.client.model.PossessiveHatModel;
 import net.fararise.possessed.server.ServerProxy;
 import net.fararise.possessed.server.item.ItemRegistry;
 import net.minecraft.client.Minecraft;
@@ -18,6 +19,7 @@ import java.util.function.Function;
 
 public class ClientProxy extends ServerProxy {
     public static final KeyBinding STOP_POSSESSING_KEY = new KeyBinding("Stop Possessing", Keyboard.KEY_C, Possessed.NAME);
+    public static final PossessiveHatModel HAT_MODEL = new PossessiveHatModel();
 
     private static final Minecraft MINECRAFT = Minecraft.getMinecraft();
 

@@ -34,7 +34,7 @@ public class GhastHandler implements EntityPossessHandler {
         if (!player.worldObj.isRemote && this.getData(player).getShort("ProjectileCooldown") <= 0) {
             player.worldObj.playEvent(null, 1018, new BlockPos((int) player.posX, (int) player.posY, (int) player.posZ), 0);
             float pitchVelocity = MathHelper.cos(player.rotationPitch * 0.017453292F);
-            float velocityX = - MathHelper.sin(player.rotationYaw * 0.017453292F) * pitchVelocity;
+            float velocityX = -MathHelper.sin(player.rotationYaw * 0.017453292F) * pitchVelocity;
             float velocityY = -MathHelper.sin(player.rotationPitch * 0.017453292F);
             float velocityZ = MathHelper.cos(player.rotationYaw * 0.017453292F) * pitchVelocity;
             EntityLargeFireball fireball = new EntityLargeFireball(player.worldObj, player, velocityX + player.motionX, velocityY + player.motionY, velocityZ + player.motionZ);
