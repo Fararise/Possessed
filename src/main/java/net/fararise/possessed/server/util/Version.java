@@ -26,6 +26,9 @@ public class Version {
                 }
             }
         }
+        if (partIndex < 3 && currentPart.length() > 0) {
+            parts[partIndex] = Integer.parseInt(currentPart);
+        }
         return new Version(parts[0], parts[1], parts[2]);
     }
 
