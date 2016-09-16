@@ -3,7 +3,7 @@ package net.fararise.possessed.server;
 import net.fararise.possessed.Possessed;
 import net.fararise.possessed.server.api.EntityPossessHandler;
 import net.fararise.possessed.server.capability.PossessCapability;
-import net.fararise.possessed.server.item.PossessiveHelmet;
+import net.fararise.possessed.server.item.ItemPossessiveHelmet;
 import net.fararise.possessed.server.network.PossessHurtMessage;
 import net.fararise.possessed.server.network.PossessMessage;
 import net.fararise.possessed.server.network.PossessiveChargeMessage;
@@ -71,7 +71,7 @@ public class ServerEventHandler {
             if (possessivePlayer == null) {
                 if (charge < PossessCapability.Implementation.MAXIMUM_CHARGE) {
                     ItemStack head = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-                    if (head != null && head.getItem() instanceof PossessiveHelmet) {
+                    if (head != null && head.getItem() instanceof ItemPossessiveHelmet) {
                         possessCapability.setPossessiveCharge(++charge);
                     }
                 }
@@ -107,7 +107,7 @@ public class ServerEventHandler {
         if (sourceOfDamage instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) sourceOfDamage;
             ItemStack head = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-            if ((head != null && head.getItem() instanceof PossessiveHelmet) || PossessHandler.isPossessing(player)) {
+            if ((head != null && head.getItem() instanceof ItemPossessiveHelmet) || PossessHandler.isPossessing(player)) {
                 PossessCapability possessCapability = PossessCapability.Implementation.get(player);
                 possessCapability.setPossessiveCharge(Math.min(PossessCapability.Implementation.MAXIMUM_CHARGE, possessCapability.getPossessiveCharge() + 1000));
                 if (player instanceof EntityPlayerMP) {
@@ -162,10 +162,7 @@ public class ServerEventHandler {
         if (!player.worldObj.isRemote && event.getHand() == EnumHand.MAIN_HAND) {
             if (event.getTarget() instanceof EntityLivingBase && !(event.getTarget() instanceof EntityPlayer) && player.isSneaking()) {
                 ItemStack head = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-                if ((head != null && head.getItem() instanceof PossessiveHelmet) || PossessHandler.isPossessing(player)) {
-                    if (head != null) {
-                        head.damageItem(2, player);
-                    }
+                if ((head != null && head.getItem() instanceof ItemPossessiveHelmet) || PossessHandler.isPossessing(player)) {
                     EntityLivingBase target = (EntityLivingBase) event.getTarget();
                     if (!(target instanceof EntityLiving && ((EntityLiving) target).isAIDisabled())) {
                         PossessHandler.possess(player, target);

@@ -1,4 +1,9 @@
+itemGroup.possessed=Possessed
+
 item.possessive_helmet.name=Possessive Hat
+item.possessitite.name=Possessitite
+
+tile.possessitite_ore.name=Possessitite Ore
 
 gui.possessive_charge.name=Possessive Charge
 

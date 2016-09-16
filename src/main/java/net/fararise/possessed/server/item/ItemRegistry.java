@@ -7,10 +7,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemRegistry {
-    public static final PossessiveHelmet POSSESSIVE_HELMET = new PossessiveHelmet();
+    public static final ItemPossessiveHelmet POSSESSIVE_HELMET = new ItemPossessiveHelmet();
+    public static final ItemPossessitite POSSESSITITE = new ItemPossessitite();
 
     public static void onPreInit() {
         GameRegistry.register(ItemRegistry.POSSESSIVE_HELMET, new ResourceLocation(Possessed.MODID, "possessive_helmet"));
+        GameRegistry.register(ItemRegistry.POSSESSITITE, new ResourceLocation(Possessed.MODID, "possessitite"));
 
         GameRegistry.addRecipe(new ItemStack(ItemRegistry.POSSESSIVE_HELMET), "BDB", "GSG", "LZL", 'B', new ItemStack(Items.DYE, 1, 0), 'D', Items.DIAMOND, 'G', Items.GLOWSTONE_DUST, 'S', Items.NETHER_STAR, 'L', Items.LEATHER, 'Z', new ItemStack(Items.DYE, 1, 4));
     }

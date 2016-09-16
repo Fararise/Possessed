@@ -3,7 +3,7 @@ package net.fararise.possessed.client.gui;
 import net.fararise.possessed.Possessed;
 import net.fararise.possessed.client.update.UpdateHandler;
 import net.fararise.possessed.server.capability.PossessCapability;
-import net.fararise.possessed.server.item.PossessiveHelmet;
+import net.fararise.possessed.server.item.ItemPossessiveHelmet;
 import net.fararise.possessed.server.possessive.PossessHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -62,7 +62,7 @@ public class GameOverlayGUI extends Gui {
             EntityPlayer player = GameOverlayGUI.MINECRAFT.thePlayer;
             ItemStack head = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
             FontRenderer fontRenderer = GameOverlayGUI.MINECRAFT.fontRendererObj;
-            if ((head != null && head.getItem() instanceof PossessiveHelmet) || PossessHandler.isPossessing(player)) {
+            if ((head != null && head.getItem() instanceof ItemPossessiveHelmet) || PossessHandler.isPossessing(player)) {
                 PossessCapability possessCapability = PossessCapability.Implementation.get(player);
                 GlStateManager.disableTexture2D();
                 int width = 150;

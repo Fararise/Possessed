@@ -5,12 +5,14 @@ import net.fararise.possessed.client.gui.GameOverlayGUI;
 import net.fararise.possessed.client.model.PossessiveHatModel;
 import net.fararise.possessed.client.update.UpdateHandler;
 import net.fararise.possessed.server.ServerProxy;
+import net.fararise.possessed.server.block.BlockRegistry;
 import net.fararise.possessed.server.item.ItemRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -46,6 +48,8 @@ public class ClientProxy extends ServerProxy {
         super.onPostInit();
         ItemModelMesher modelMesher = ClientProxy.MINECRAFT.getRenderItem().getItemModelMesher();
         modelMesher.register(ItemRegistry.POSSESSIVE_HELMET, stack -> new ModelResourceLocation(Possessed.MODID + ":possessive_helmet", "inventory"));
+        modelMesher.register(ItemRegistry.POSSESSITITE, stack -> new ModelResourceLocation(Possessed.MODID + ":possessitite", "inventory"));
+        modelMesher.register(Item.getItemFromBlock(BlockRegistry.POSSESSITITE_ORE),stack -> new ModelResourceLocation(Possessed.MODID + ":possessitite_ore", "inventory"));
     }
 
     @Override
