@@ -46,6 +46,16 @@ public class GhastHandler implements EntityPossessHandler {
     }
 
     @Override
+    public float getGUIScale() {
+        return 0.6F;
+    }
+
+    @Override
+    public float getGUITranslationY() {
+        return -10.0F;
+    }
+
+    @Override
     public ResourceLocation getIdentifier() {
         return new ResourceLocation(Possessed.MODID, "ghast");
     }

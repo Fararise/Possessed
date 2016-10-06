@@ -13,6 +13,9 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -22,6 +25,8 @@ import java.util.function.Function;
 
 public class ClientProxy extends ServerProxy {
     public static final KeyBinding STOP_POSSESSING_KEY = new KeyBinding("Stop Possessing", Keyboard.KEY_C, Possessed.NAME);
+    public static final KeyBinding POSSESS_EXPERIENCE = new KeyBinding("Open Possess Experience", Keyboard.KEY_P, Possessed.NAME);
+
     public static final PossessiveHatModel HAT_MODEL = new PossessiveHatModel();
 
     private static final Minecraft MINECRAFT = Minecraft.getMinecraft();
@@ -36,6 +41,7 @@ public class ClientProxy extends ServerProxy {
         MinecraftForge.EVENT_BUS.register(new GameOverlayGUI());
 
         ClientRegistry.registerKeyBinding(ClientProxy.STOP_POSSESSING_KEY);
+        ClientRegistry.registerKeyBinding(ClientProxy.POSSESS_EXPERIENCE);
     }
 
     @Override
@@ -49,7 +55,7 @@ public class ClientProxy extends ServerProxy {
         ItemModelMesher modelMesher = ClientProxy.MINECRAFT.getRenderItem().getItemModelMesher();
         modelMesher.register(ItemRegistry.POSSESSIVE_HELMET, stack -> new ModelResourceLocation(Possessed.MODID + ":possessive_helmet", "inventory"));
         modelMesher.register(ItemRegistry.POSSESSITITE, stack -> new ModelResourceLocation(Possessed.MODID + ":possessitite", "inventory"));
-        modelMesher.register(Item.getItemFromBlock(BlockRegistry.POSSESSITITE_ORE),stack -> new ModelResourceLocation(Possessed.MODID + ":possessitite_ore", "inventory"));
+        modelMesher.register(Item.getItemFromBlock(BlockRegistry.POSSESSITITE_ORE), stack -> new ModelResourceLocation(Possessed.MODID + ":possessitite_ore", "inventory"));
     }
 
     @Override
@@ -72,5 +78,11 @@ public class ClientProxy extends ServerProxy {
         if (player == MINECRAFT.thePlayer) {
             MINECRAFT.playerController.pickItem(index);
         }
+    }
+
+    @Override
+    public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
+        TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+        return null;
     }
 }

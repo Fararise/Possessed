@@ -14,6 +14,6 @@ public class ItemRegistry {
         GameRegistry.register(ItemRegistry.POSSESSIVE_HELMET, new ResourceLocation(Possessed.MODID, "possessive_helmet"));
         GameRegistry.register(ItemRegistry.POSSESSITITE, new ResourceLocation(Possessed.MODID, "possessitite"));
 
-        GameRegistry.addRecipe(new ItemStack(ItemRegistry.POSSESSIVE_HELMET), "BDB", "GSG", "LZL", 'B', new ItemStack(Items.DYE, 1, 0), 'D', Items.DIAMOND, 'G', Items.GLOWSTONE_DUST, 'S', Items.NETHER_STAR, 'L', Items.LEATHER, 'Z', new ItemStack(Items.DYE, 1, 4));
+        GameRegistry.addRecipe(new ItemStack(ItemRegistry.POSSESSIVE_HELMET), "BDB", "GSG", "LZL", 'B', new ItemStack(Items.DYE, 1, 0), 'D', Items.DIAMOND, 'G', Items.GLOWSTONE_DUST, 'S', ItemRegistry.POSSESSITITE, 'L', Items.LEATHER, 'Z', new ItemStack(Items.DYE, 1, 4));
     }
 }

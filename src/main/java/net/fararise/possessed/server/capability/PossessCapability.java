@@ -2,6 +2,7 @@ package net.fararise.possessed.server.capability;
 
 import net.fararise.possessed.Possessed;
 import net.fararise.possessed.server.possessive.PossessHandler;
+import net.fararise.possessed.server.possessive.PossessionExperience;
 import net.fararise.possessed.server.possessive.PossessivePlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -25,15 +26,21 @@ public interface PossessCapability {
 
     EntityPlayer getPlayer();
 
-    int getPossessiveCharge();
+    float getPossessTime();
 
-    void setPossessiveCharge(int charge);
+    void setPossessTime(float time);
+
+    PossessionExperience getExperience();
+
+    void setExperience(PossessionExperience experience);
 
     class Implementation implements PossessCapability {
-        public static final int MAXIMUM_CHARGE = 12000;
+        public static final float BASE_TIME = 12000;
+        private static final int VERSION = 1;
 
         private EntityPlayer player;
-        private int possessiveCharge = Implementation.MAXIMUM_CHARGE;
+        private float possessTime = Implementation.BASE_TIME;
+        private PossessionExperience experience = new PossessionExperience();
 
         public static PossessCapability get(EntityPlayer player) {
             return player.getCapability(Possessed.getPlayerDataCapability(), null);
@@ -54,11 +61,17 @@ public interface PossessCapability {
                 compound.setTag("Entity", entityTag);
                 possessivePlayer.serialize(compound, this.player);
             }
-            compound.setInteger("PossessiveCharge", this.possessiveCharge);
+            compound.setFloat("PossessTime", this.possessTime);
+            compound.setShort("DataVersion", (short) VERSION);
+            this.experience.serialize(compound);
         }
 
         @Override
         public void deserialize(NBTTagCompound compound) {
+            int version = 0;
+            if (compound.hasKey("DataVersion")) {
+                version = compound.getShort("DataVersion");
+            }
             Entity entity = EntityList.createEntityFromNBT(compound.getCompoundTag("Entity"), this.player.worldObj);
             if (entity instanceof EntityLivingBase) {
                 PossessHandler.possess(this.player, (EntityLivingBase) entity);
@@ -67,7 +80,10 @@ public interface PossessCapability {
                     player.deserialize(compound, this.player);
                 }
             }
-            this.possessiveCharge = compound.getInteger("PossessiveCharge");
+            this.possessTime = version == 0 ? compound.getInteger("PossessiveCharge") : compound.getFloat("PossessTime");
+            if (version >= 1) {
+                this.experience.deserialize(compound);
+            }
         }
 
         @Override
@@ -76,13 +92,23 @@ public interface PossessCapability {
         }
 
         @Override
-        public int getPossessiveCharge() {
-            return this.possessiveCharge;
+        public float getPossessTime() {
+            return this.possessTime;
         }
 
         @Override
-        public void setPossessiveCharge(int charge) {
-            this.possessiveCharge = charge;
+        public void setPossessTime(float time) {
+            this.possessTime = time;
+        }
+
+        @Override
+        public PossessionExperience getExperience() {
+            return this.experience;
+        }
+
+        @Override
+        public void setExperience(PossessionExperience experience) {
+            this.experience = experience;
         }
     }
 

@@ -5,6 +5,7 @@ item.possessitite.name=Possessitite
 
 tile.possessitite_ore.name=Possessitite Ore
 
-gui.possessive_charge.name=Possessive Charge
+gui.possess_time.name=Possessive Charge
+gui.possess_experience.name=Possession Experience
 
 notification.update_available.name=Update available: %s!

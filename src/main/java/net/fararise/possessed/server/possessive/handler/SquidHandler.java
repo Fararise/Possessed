@@ -25,6 +25,16 @@ public class SquidHandler implements EntityPossessHandler {
     }
 
     @Override
+    public float getGUIScale() {
+        return 0.4F;
+    }
+
+    @Override
+    public float getGUITranslationY() {
+        return -13.0F;
+    }
+
+    @Override
     public Class<? extends EntityLivingBase> getEntityClass() {
         return EntitySquid.class;
     }

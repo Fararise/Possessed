@@ -1,6 +1,7 @@
 package net.fararise.possessed.client;
 
 import net.fararise.possessed.Possessed;
+import net.fararise.possessed.client.gui.PossessExperienceGUI;
 import net.fararise.possessed.server.api.EntityPossessHandler;
 import net.fararise.possessed.server.network.PossessClickEmptyMessage;
 import net.fararise.possessed.server.network.StopPossessingMessage;
@@ -112,6 +113,8 @@ public class ClientEventHandler {
         if (ClientProxy.STOP_POSSESSING_KEY.isPressed() && PossessHandler.isPossessing(player)) {
             PossessHandler.possess(player, null);
             Possessed.getNetworkWrapper().sendToServer(new StopPossessingMessage());
+        } else if (ClientProxy.POSSESS_EXPERIENCE.isPressed() && MINECRAFT.currentScreen == null) {
+            MINECRAFT.displayGuiScreen(new PossessExperienceGUI(player));
         }
     }
 

@@ -27,6 +27,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.util.ArrayList;
@@ -426,11 +427,11 @@ public class PossessivePlayer {
         this.originalX = compound.getDouble("OriginalX");
         this.originalY = compound.getDouble("OriginalY");
         this.originalZ = compound.getDouble("OriginalZ");
-        NBTTagList originalInventoryTag = compound.getTagList("OriginalInventory", 10);
+        NBTTagList originalInventoryTag = compound.getTagList("OriginalInventory", Constants.NBT.TAG_COMPOUND);
         this.originalInventory = new InventoryPlayer(player);
         this.originalInventory.readFromNBT(originalInventoryTag);
         this.originalInventoryContainer = new ContainerPlayer(this.originalInventory, !player.worldObj.isRemote, player);
-        NBTTagList handlerList = compound.getTagList("Handlers", 10);
+        NBTTagList handlerList = compound.getTagList("Handlers", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < handlerList.tagCount(); i++) {
             NBTTagCompound handlerTag = handlerList.getCompoundTagAt(i);
             try {

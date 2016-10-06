@@ -6,7 +6,7 @@ import net.fararise.possessed.server.capability.PossessCapability;
 import net.fararise.possessed.server.item.ItemPossessiveHelmet;
 import net.fararise.possessed.server.network.PossessHurtMessage;
 import net.fararise.possessed.server.network.PossessMessage;
-import net.fararise.possessed.server.network.PossessiveChargeMessage;
+import net.fararise.possessed.server.network.SyncDataMessage;
 import net.fararise.possessed.server.network.UpdatePossessedDataMessage;
 import net.fararise.possessed.server.possessive.PossessHandler;
 import net.fararise.possessed.server.possessive.PossessivePlayer;
@@ -67,17 +67,21 @@ public class ServerEventHandler {
                 }
             }
             PossessCapability possessCapability = PossessCapability.Implementation.get(player);
-            int charge = possessCapability.getPossessiveCharge();
+            float time = possessCapability.getPossessTime();
             if (possessivePlayer == null) {
-                if (charge < PossessCapability.Implementation.MAXIMUM_CHARGE) {
+                if (time < PossessCapability.Implementation.BASE_TIME) {
                     ItemStack head = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
                     if (head != null && head.getItem() instanceof ItemPossessiveHelmet) {
-                        possessCapability.setPossessiveCharge(++charge);
+                        possessCapability.setPossessTime(++time);
                     }
                 }
             } else {
-                if (charge > 0) {
-                    possessCapability.setPossessiveCharge(charge - 2);
+                if (time > 0) {
+                    float rate = possessCapability.getExperience().getRate(possessivePlayer.getPossessing().getClass());
+                    possessCapability.setPossessTime(time - 2 * rate);
+                    if (player.ticksExisted % 10 == 0) {
+                        possessCapability.getExperience().incrementExperience(possessivePlayer.getPossessing().getClass(), 1);
+                    }
                 } else {
                     PossessHandler.possess(player, null);
                 }
@@ -108,10 +112,15 @@ public class ServerEventHandler {
             EntityPlayer player = (EntityPlayer) sourceOfDamage;
             ItemStack head = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
             if ((head != null && head.getItem() instanceof ItemPossessiveHelmet) || PossessHandler.isPossessing(player)) {
+                PossessivePlayer possessivePlayer = PossessHandler.get(player);
                 PossessCapability possessCapability = PossessCapability.Implementation.get(player);
-                possessCapability.setPossessiveCharge(Math.min(PossessCapability.Implementation.MAXIMUM_CHARGE, possessCapability.getPossessiveCharge() + 1000));
+                possessCapability.setPossessTime(Math.min(PossessCapability.Implementation.BASE_TIME, possessCapability.getPossessTime() + 1000));
+                if (possessivePlayer != null) {
+                    EntityLivingBase possessing = possessivePlayer.getPossessing();
+                    possessCapability.getExperience().incrementExperience(possessing.getClass(), (int) event.getEntityLiving().getMaxHealth());
+                }
                 if (player instanceof EntityPlayerMP) {
-                    Possessed.getNetworkWrapper().sendTo(new PossessiveChargeMessage(player, possessCapability.getPossessiveCharge()), (EntityPlayerMP) player);
+                    Possessed.getNetworkWrapper().sendTo(new SyncDataMessage(player, possessCapability.getPossessTime(), possessCapability.getExperience()), (EntityPlayerMP) player);
                 }
             }
         }
@@ -150,7 +159,8 @@ public class ServerEventHandler {
             if (!player.worldObj.isRemote) {
                 if (player instanceof EntityPlayerMP) {
                     Possessed.getNetworkWrapper().sendTo(new PossessMessage(player, PossessHandler.get(player)), (EntityPlayerMP) player);
-                    Possessed.getNetworkWrapper().sendTo(new PossessiveChargeMessage(player, PossessCapability.Implementation.get(player).getPossessiveCharge()), (EntityPlayerMP) player);
+                    PossessCapability capability = PossessCapability.Implementation.get(player);
+                    Possessed.getNetworkWrapper().sendTo(new SyncDataMessage(player, capability.getPossessTime(), capability.getExperience()), (EntityPlayerMP) player);
                 }
             }
         }

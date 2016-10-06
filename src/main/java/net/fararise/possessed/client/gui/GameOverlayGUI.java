@@ -5,7 +5,10 @@ import net.fararise.possessed.client.update.UpdateHandler;
 import net.fararise.possessed.server.capability.PossessCapability;
 import net.fararise.possessed.server.item.ItemPossessiveHelmet;
 import net.fararise.possessed.server.possessive.PossessHandler;
+import net.fararise.possessed.server.possessive.PossessionExperience;
+import net.fararise.possessed.server.possessive.PossessivePlayer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -34,13 +37,16 @@ public class GameOverlayGUI extends Gui {
     private int updateAnimation;
     private boolean displayingUpdate;
 
+    private int prevExperience;
+
     public static void displayUpdate() {
         GameOverlayGUI.shouldDisplayUpdate = true;
     }
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (GameOverlayGUI.MINECRAFT.thePlayer != null && GameOverlayGUI.MINECRAFT.thePlayer.ticksExisted > 40 && GameOverlayGUI.MINECRAFT.currentScreen == null) {
+        EntityPlayerSP player = GameOverlayGUI.MINECRAFT.thePlayer;
+        if (player != null && player.ticksExisted > 40 && GameOverlayGUI.MINECRAFT.currentScreen == null) {
             if (GameOverlayGUI.shouldDisplayUpdate && !this.displayingUpdate) {
                 this.displayingUpdate = true;
                 this.updateAnimation = 0;
@@ -49,6 +55,13 @@ public class GameOverlayGUI extends Gui {
                 if (++this.updateAnimation > GameOverlayGUI.UPDATE_ANIMATION_LENGTH) {
                     this.displayingUpdate = false;
                 }
+            }
+        }
+        if (player != null && event.phase == TickEvent.Phase.START) {
+            PossessCapability possessCapability = PossessCapability.Implementation.get(player);
+            PossessivePlayer possessivePlayer = PossessHandler.get(player);
+            if (possessivePlayer != null) {
+                this.prevExperience = possessCapability.getExperience().getExperience(possessivePlayer.getPossessing().getClass());
             }
         }
     }
@@ -62,25 +75,26 @@ public class GameOverlayGUI extends Gui {
             EntityPlayer player = GameOverlayGUI.MINECRAFT.thePlayer;
             ItemStack head = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
             FontRenderer fontRenderer = GameOverlayGUI.MINECRAFT.fontRendererObj;
-            if ((head != null && head.getItem() instanceof ItemPossessiveHelmet) || PossessHandler.isPossessing(player)) {
+            PossessivePlayer possessivePlayer = PossessHandler.get(player);
+            boolean possessing = possessivePlayer != null;
+            if ((head != null && head.getItem() instanceof ItemPossessiveHelmet) || possessing) {
                 PossessCapability possessCapability = PossessCapability.Implementation.get(player);
                 GlStateManager.disableTexture2D();
                 int width = 150;
                 GlStateManager.color(0.5F, 0.5F, 0.5F, 1.0F);
                 this.drawTexturedModalRect(2, 12, 0, 0, width, 10);
-                this.drawGradientRect(3, 13, 3 + possessCapability.getPossessiveCharge() * (width - 2) / PossessCapability.Implementation.MAXIMUM_CHARGE, 13 + 8, 0xFF97E100, 0xFF00E09B);
+                this.drawGradientRect(3, 13, (int) (3 + possessCapability.getPossessTime() * (width - 2) / PossessCapability.Implementation.BASE_TIME), 13 + 8, 0xFF97E100, 0xFF00E09B);
                 GlStateManager.enableTexture2D();
-                fontRenderer.drawString(I18n.translateToLocal("gui.possessive_charge.name"), 3, 2, 0xFFFFFF);
-                double minutes = possessCapability.getPossessiveCharge() / 20.0 / 60.0 / 2.0;
-                String minutesString = String.valueOf((int) minutes);
-                String secondsString = String.valueOf((int) ((minutes - (int) minutes) * 60));
-                while (minutesString.length() < 2) {
-                    minutesString = "0" + minutesString;
+                fontRenderer.drawString(I18n.translateToLocal("gui.possess_time.name"), 3, 2, 0xFFFFFF);
+                fontRenderer.drawString((int) (possessCapability.getPossessTime() * 100 / PossessCapability.Implementation.BASE_TIME) + "%", 155, 13, 0xFFFFFF);
+                if (possessing) {
+                    GlStateManager.disableTexture2D();
+                    int experience = possessCapability.getExperience().getExperience(possessivePlayer.getPossessing().getClass());
+                    GlStateManager.color(0.5F, 0.5F, 0.5F, 1.0F);
+                    this.drawTexturedModalRect(2, 24, 0, 0, width, 7);
+                    int scaledProgress = (int) ((this.prevExperience + ((float) experience - this.prevExperience) * partialTicks) * (width - 2)) / PossessionExperience.MAXIMUM_EXPERIENCE;
+                    this.drawGradientRect(3, 25, 3 + scaledProgress, 30, 0xFFA616FF, 0xFF5D0EA5);
                 }
-                while (secondsString.length() < 2) {
-                    secondsString = "0" + secondsString;
-                }
-                fontRenderer.drawString(minutesString + ":" + secondsString, 155, 13, 0xFFFFFF);
             }
             if (this.displayingUpdate) {
                 int width = resolution.getScaledWidth();

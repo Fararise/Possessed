@@ -69,4 +69,12 @@ public interface EntityPossessHandler {
     default boolean canPossess(EntityPlayer player, EntityLivingBase entity) {
         return true;
     }
+
+    default float getGUIScale() {
+        return 1.0F;
+    }
+
+    default float getGUITranslationY() {
+        return 0.0F;
+    }
 }

@@ -6,8 +6,8 @@ import net.fararise.possessed.server.capability.PossessCapability;
 import net.fararise.possessed.server.network.PossessClickEmptyMessage;
 import net.fararise.possessed.server.network.PossessHurtMessage;
 import net.fararise.possessed.server.network.PossessMessage;
-import net.fararise.possessed.server.network.PossessiveChargeMessage;
 import net.fararise.possessed.server.network.StopPossessingMessage;
+import net.fararise.possessed.server.network.SyncDataMessage;
 import net.fararise.possessed.server.network.UpdatePossessedDataMessage;
 import net.fararise.possessed.server.possessive.PossessHandler;
 import net.minecraftforge.common.capabilities.Capability;
@@ -26,6 +26,9 @@ public class Possessed {
     public static final String MODID = "possessed";
     public static final String NAME = "Possessed";
     public static final String VERSION = "1.0.0";
+
+    @Mod.Instance(Possessed.MODID)
+    private static Possessed instance;
 
     @SidedProxy(serverSide = "net.fararise.possessed.server.ServerProxy", clientSide = "net.fararise.possessed.client.ClientProxy")
     private static ServerProxy proxy;
@@ -47,6 +50,10 @@ public class Possessed {
         return Possessed.playerDataCapability;
     }
 
+    public static Possessed getInstance() {
+        return Possessed.instance;
+    }
+
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
         Possessed.proxy.onPreInit();
@@ -57,7 +64,7 @@ public class Possessed {
         Possessed.networkWrapper.registerMessage(UpdatePossessedDataMessage.Handler.class, UpdatePossessedDataMessage.class, 1, Side.CLIENT);
         Possessed.networkWrapper.registerMessage(PossessClickEmptyMessage.Handler.class, PossessClickEmptyMessage.class, 2, Side.SERVER);
         Possessed.networkWrapper.registerMessage(PossessHurtMessage.Handler.class, PossessHurtMessage.class, 3, Side.CLIENT);
-        Possessed.networkWrapper.registerMessage(PossessiveChargeMessage.Handler.class, PossessiveChargeMessage.class, 4, Side.CLIENT);
+        Possessed.networkWrapper.registerMessage(SyncDataMessage.Handler.class, SyncDataMessage.class, 4, Side.CLIENT);
         Possessed.networkWrapper.registerMessage(StopPossessingMessage.Handler.class, StopPossessingMessage.class, 5, Side.SERVER);
     }
 
